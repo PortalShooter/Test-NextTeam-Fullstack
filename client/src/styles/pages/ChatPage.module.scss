@@ -1,0 +1,14 @@
+.chat {
+  // display: flex;
+  &__message-item {
+    display: grid;
+    grid-row-gap: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+  &__form {
+    display: grid;
+    grid-row-gap: 20px;
+    width: 100%;
+  }
+}
