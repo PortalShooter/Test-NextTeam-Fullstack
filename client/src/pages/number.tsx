@@ -1,17 +1,57 @@
+import BasicTable from "@/components/BasicTable";
+import { useInput } from "@/hooks/useInput";
 import MainLayout from "@/layout/MainLayout";
+import { IGetNumber } from "@/types/IGetNumber";
 import { Button, Checkbox, FormControlLabel, FormGroup, TextField } from "@mui/material";
+import axios from "axios";
+import { useEffect, useRef, useState } from "react";
+
+interface sendNumberProps {
+  number: number;
+  isFactional?: boolean;
+  isNegative?: boolean;
+}
 
 const NumberPage = () => {
+  const number = useInput('')
+  const checkbox = useInput('')
+  const isNegativeRef = useRef<HTMLInputElement>(null)
+  const isFactionalRef = useRef<HTMLInputElement>(null)
+  const [history, setHistory] = useState<IGetNumber[]>([])
+
+  function sendNumber() {
+    const data: sendNumberProps = {
+      number: +number.value,
+      isNegative: isNegativeRef.current?.checked,
+      isFactional: isFactionalRef.current?.checked
+    }
+
+    axios.post('http://localhost:4000/number', data)
+    .then(res => setHistory(prevValue => [...prevValue, res.data]))
+    .catch(e => console.log(e))
+  }
+
+  useEffect(() => {
+    console.log(history)
+  }, [history]);
+  
+
   return (
     <MainLayout>
-      <div>
-          <TextField id="outlined-basic" label="Введите число" variant="outlined" />
+      <div style={{display: 'flex', justifyContent: 'space-between'}}>
+        <div>
+          <TextField type="number" {...number} id="outlined-basic" label="Введите число" variant="outlined" />
           <FormGroup>
-            <FormControlLabel control={<Checkbox />} label="Число отрицательное?" />
-            <FormControlLabel control={<Checkbox />} label="Число дробное?" />
+            <FormControlLabel inputRef={isNegativeRef} control={<Checkbox {...checkbox}/>} label="Число отрицательное?" />
+            <FormControlLabel inputRef={isFactionalRef} control={<Checkbox />} label="Число дробное?" />
           </FormGroup>
-          <Button variant="contained">Отправить и получить среднее</Button>
+          <Button onClick={sendNumber} variant="contained">Отправить и получить среднее</Button>
         </div>
+        <div style={{width: '50%'}}>
+          <h2>История:</h2>
+          {history[0] && <BasicTable data={history} />}
+        </div>
+      </div>
     </MainLayout>
   );
 }
