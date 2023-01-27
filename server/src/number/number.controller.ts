@@ -1,6 +1,6 @@
 import { ISendNumber } from './interface/ISendNumber';
 import { NumberService } from './number.service';
-import { Body, Controller, Get, Param, Post, Req } from '@nestjs/common';
+import { Body, Controller, Get, Post } from '@nestjs/common';
 
 @Controller('/number')
 export class NumberController {
@@ -11,7 +11,7 @@ export class NumberController {
     return this.numberService.sendNumber(data);
   }
   @Get()
-  getInfo() {
-    return this.numberService.getInfo();
+  getAllInfo() {
+    return this.numberService.getAllInfo();
   }
 }

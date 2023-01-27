@@ -1,12 +1,13 @@
-import { Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Post } from '@nestjs/common';
 import { MessageService } from './message.service';
+import { IAllMessage } from './interface/IAllMessage';
 
 @Controller('message')
 export class MessageController {
   constructor(private readonly messageService: MessageService) {}
 
   @Post()
-  addMessage() {
-    return this.messageService.addMessage();
+  addMessage(@Body() message: IAllMessage) {
+    return this.messageService.addMessage(message);
   }
 }

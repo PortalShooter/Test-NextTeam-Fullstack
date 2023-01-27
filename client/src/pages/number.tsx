@@ -1,4 +1,5 @@
 import BasicTable from "@/components/BasicTable";
+import { urlReq } from "@/helper/getUrl";
 import { useInput } from "@/hooks/useInput";
 import MainLayout from "@/layout/MainLayout";
 import { IGetNumber } from "@/types/IGetNumber";
@@ -26,15 +27,16 @@ const NumberPage = () => {
       isFactional: isFactionalRef.current?.checked
     }
 
-    axios.post('http://localhost:4000/number', data)
-    .then(res => setHistory(prevValue => [...prevValue, res.data]))
+    axios.post(urlReq + '/number', data)
+    .then(res => setHistory(prevValue => [res.data, ...prevValue]))
     .catch(e => console.log(e))
   }
 
   useEffect(() => {
-    console.log(history)
-  }, [history]);
-  
+    axios.get(urlReq + '/number')
+    .then(res => setHistory(res.data))
+    .catch(e => console.log(e))
+  }, []);
 
   return (
     <MainLayout>

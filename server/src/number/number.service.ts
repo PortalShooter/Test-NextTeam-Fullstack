@@ -1,9 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { ISendNumber } from './interface/ISendNumber';
-
+import { IHistory } from './interface/IHistory';
 @Injectable()
 export class NumberService {
   lastNumber: number | null = null;
+  history: IHistory[] = [];
 
   sendNumber(data: ISendNumber) {
     const { number, isFactional, isNegative } = data;
@@ -11,10 +12,12 @@ export class NumberService {
     const averageNumber = lastNumber ? (number + lastNumber) / 2 : number;
 
     this.lastNumber = number;
+    const result: IHistory = { lastNumber, number, averageNumber };
+    this.history.push(result);
 
-    return { lastNumber, number, averageNumber };
+    return result;
   }
-  getInfo() {
-    return 555;
+  getAllInfo() {
+    return this.history;
   }
 }
